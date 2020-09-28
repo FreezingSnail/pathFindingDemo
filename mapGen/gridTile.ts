@@ -1,4 +1,4 @@
-enum tileType { 
+export enum tileType { 
     blocked,
     regular,
     hard,
@@ -6,20 +6,22 @@ enum tileType {
     hardHighway
 }
 
-enum highwayDir {
-    none,
-    south,
-    east,
-    west
-}
-
 export class Tile {
     type: tileType;
-    highwayDirection: highwayDir;
 
-    constructor(type:tileType, dir?:highwayDir){
+    constructor(type:tileType){
         this.type - type;
-        this.highwayDirection = dir || highwayDir.none;
+    }
+
+    getTileChar() { 
+        switch(this.type){
+            case tileType.blocked: return '0';
+            case tileType.regular: return '1';
+            case tileType.hard: return '2';
+            case tileType.regularHighway: return 'a';
+            case tileType.hardHighway: return 'b';
+            defualt: return '!'
+        }
     }
 
 }
