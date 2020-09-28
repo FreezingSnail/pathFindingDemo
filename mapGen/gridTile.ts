@@ -9,8 +9,8 @@ export enum tileType {
 export class Tile {
     type: tileType;
 
-    constructor(type:tileType){
-        this.type - type;
+    constructor(type?:tileType){
+        this.type = type | tileType.regular;
     }
 
     getTileChar() { 
