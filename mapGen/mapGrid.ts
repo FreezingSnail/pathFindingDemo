@@ -1,9 +1,9 @@
 import { Tile, tileType } from "./gridTile";
 
-let WIDTH = 160;
-let HEIGHT = 120;
-let HIGHWAYSIZE = 20;
-let HIGHWAYCOUNT = 4;
+let WIDTH:number = 160;
+let HEIGHT:number = 120;
+let HIGHWAYSIZE:number = 20;
+let HIGHWAYCOUNT:number = 5;
 
 enum direction_t { 
     none,
@@ -14,8 +14,12 @@ enum direction_t {
     outbounds
 }
 
+
+
 export class Grid {
     map:Tile[][];
+    start:number[];
+    end:number[];
 
     constructor() {
         this.map = [];
@@ -28,14 +32,36 @@ export class Grid {
         this.genHardCells();
         this.genHighWays();
         this.genBlockCells();
+
+        this.start = this.genPoint();
+        this.end =this.genPoint();
+        while(this.distance(this.start, this.end) < 100){
+            this.start = this.genPoint();
+            this.end =this.genPoint();
+        }
     }
 
+    distance(a:number[], b:number[]): number {
+        let x:number = a[0] - b[0];
+        let y:number = a[1] - b[1];
+
+        return Math.sqrt(x*x + y*y);
+
+    }
     printMap(){
         // build each rows sting
         let rowString: string = "";
         for (let i = 0; i < HEIGHT; ++i){
             for (let j = 0; j < WIDTH; ++j){
-                rowString += this.map[i][j].getTileChar();
+                if(i == this.start[1] && j === this.start[0]){
+                    rowString +='S';
+                }
+                else if(i == this.end[1] && j === this.end[0]){
+                    rowString += 'E';
+                }
+                else {
+                    rowString += this.map[i][j].getTileChar();
+                }
             }
             console.log(rowString);
             rowString = "";
@@ -277,7 +303,6 @@ export class Grid {
         return true;
     }
 
-
     genBlockCells(){
         let cellsToBlock:Tile[] = [];
 
@@ -297,5 +322,21 @@ export class Grid {
         
     }
 
+    genPoint(): number[] {
+        
+
+        let x = Math.floor(Math.random() * WIDTH);
+        let y = Math.floor(Math.random() * HEIGHT);
+
+        while( !(x < 20 || x > WIDTH-21) &&
+                !(y<20 || y > HEIGHT - 21)) {
+
+            x = Math.floor(Math.random() * WIDTH);
+            y = Math.floor(Math.random() * HEIGHT);
+        }
+
+
+        return [x, y];
+    }
     
 }
