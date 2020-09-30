@@ -90,7 +90,7 @@ function moveType(from:Tile, to:Tile) : moveCase {
 }
 
 
-function moveCost(from:Tile, to:Tile) : number {
+export function moveCost(from:Tile, to:Tile) : number {
     if(!canMoveTo(to)){
         console.log("cant move to blocked tile");
         return -1;

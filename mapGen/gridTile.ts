@@ -3,7 +3,8 @@ export enum tileType {
     regular,
     hard,
     regularHighway,
-    hardHighway
+    hardHighway,
+    path,
 }
 
 export class Tile {
@@ -14,7 +15,7 @@ export class Tile {
     constructor(x:number, y:number, type?:tileType ){
         this.xChord = x;
         this.yChord = y;
-        this.type = type | tileType.regular;
+        this.type = type || tileType.regular;
     }
 
     setType(type:tileType) {
@@ -56,6 +57,7 @@ export class Tile {
             case tileType.hard: return '^';
             case tileType.regularHighway: return 'a';
             case tileType.hardHighway: return 'b';
+            case tileType.path: return '>';
             default: return '!'
         }
     }

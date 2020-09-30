@@ -1,4 +1,5 @@
 import { Tile, tileType } from "./gridTile";
+import { distance } from "../util/calculations"
 
 let WIDTH:number = 160;
 let HEIGHT:number = 120;
@@ -35,19 +36,13 @@ export class Grid {
 
         this.start = this.genPoint();
         this.end =this.genPoint();
-        while(this.distance(this.start, this.end) < 100){
+        while(distance(this.start, this.end) < 100){
             this.start = this.genPoint();
             this.end =this.genPoint();
         }
     }
 
-    distance(a:number[], b:number[]): number {
-        let x:number = a[0] - b[0];
-        let y:number = a[1] - b[1];
-
-        return Math.sqrt(x*x + y*y);
-
-    }
+    
     printMap(){
         // build each rows sting
         let rowString: string = "";
@@ -167,9 +162,9 @@ export class Grid {
     }
 
     genHighWay(): boolean {
-        console.log();
-        console.log("generating Highways")
-        console.log();
+        //console.log();
+        //console.log("generating Highways")
+        //console.log();
         
         //pick a boundary, starting top clockwise;
         let boundary:number = Math.floor(Math.random() * 4);
@@ -276,25 +271,25 @@ export class Grid {
         let tries:number = 0;
         let count:number = 0
         while(tries <  20  && count < HIGHWAYCOUNT){
-            console.log();
-            console.log("highway attempts failed:" + tries);
-            console.log("highway attempts passed:" + count);
-            console.log();
+           //console.log();
+           // console.log("highway attempts failed:" + tries);
+            //console.log("highway attempts passed:" + count);
+            //console.log();
             let oldMap:Tile[][] = this.copyGrid(this.map);
 
             let success:boolean = this.genHighWay(); 
             if(success){
-                console.log();
-                console.log("highway sucsessfull");
-                console.log();
+                //console.log();
+                //console.log("highway sucsessfull");
+                //console.log();
                 count++;
                 //this.printMap();
             }
             else{
                 this.map = oldMap;
-                console.log();
-                console.log("highway failed");
-                console.log();
+                //console.log();
+                //console.log("highway failed");
+                //console.log();
                 tries++;
             }
         }
@@ -337,6 +332,52 @@ export class Grid {
 
 
         return [x, y];
+    }
+
+    getNeighbors(chords:number[] ): Tile[] {
+        if (chords.length < 2)
+            return [];
+
+        let neighbors = []
+        let xStart = (chords[0] -1) < 0 ? 0 : (chords[0] -1);
+        let yStart = (chords[1] -1) < 0 ? 0 : (chords[1] -1);
+
+        let yEnd = (yStart + 3) <= HEIGHT ? (yStart + 3) : HEIGHT -1;
+        let xEnd = (xStart + 3) <= WIDTH ? (xStart + 3) : WIDTH -1;
+        console.log(xStart, yStart, xEnd, yEnd);
+        for(let i = yStart; i < yEnd; ++i){
+            for(let j = xStart; j < xEnd; ++j){
+
+                //console.log("pull current chords");
+                //console.log("tile chords: " + chords[0]+ ' ' + chords[1] , j, i);
+                //console.log("not  tile? :" + !(j === chords[0] && i === chords[1]))
+                if(!(j === chords[0] && i === chords[1])) { //not the same tile
+                    //console.log("add neighbors")
+                    //console.log(j, i);
+                    let tile:Tile = this.map[i][j];
+                    if(tile.getType() !== tileType.blocked)
+                        neighbors.push(this.map[i][j]);
+                }
+            }
+        }
+        //console.log("neigbors are: ");
+        //console.log(neighbors);
+        return neighbors;
+    }
+
+    getStart():Tile {
+        return this.map[this.start[1]][this.start[0]];
+    }
+
+    getEnd():Tile {
+        return this.map[this.end[1]][this.end[0]];
+    }
+
+    updateForPath(path:Tile[]) {
+        for(let i:number = 0; i < path.length; i++){
+            let chords:number[] = path[i].getChords();
+            this.map[chords[1]][chords[0]].setType(tileType.path);
+        }
     }
     
 }
