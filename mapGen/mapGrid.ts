@@ -27,6 +27,7 @@ export class Grid {
         }
         this.genHardCells();
         this.genHighWays();
+        this.genBlockCells();
     }
 
     printMap(){
@@ -275,7 +276,26 @@ export class Grid {
 
         return true;
     }
+
+
+    genBlockCells(){
+        let cellsToBlock:Tile[] = [];
+
+        while (cellsToBlock.length < Math.floor((HEIGHT*WIDTH) * .2)){
+            let xChord = Math.floor(Math.random() * WIDTH);
+            let yChord = Math.floor(Math.random() * HEIGHT);
+
+            let tempTile = this.map[yChord][xChord];
+            if(!(cellsToBlock.filter(tile => (tile.xChord === tempTile.xChord && tile.yChord === tempTile.yChord)).length > 0) &&
+                    (tempTile.type !== tileType.hardHighway && tempTile.type !== tileType.regularHighway)){
+                cellsToBlock.push(tempTile);
+            }
+        }
+
+        cellsToBlock.forEach( tile => tile.setType(tileType.blocked));
+
+        
+    }
+
     
-
-
 }
