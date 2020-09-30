@@ -39,6 +39,7 @@ export class Grid {
             console.log(rowString);
             rowString = "";
         }
+        console.log();
     }
 
     genHardCells() {
@@ -71,10 +72,13 @@ export class Grid {
             console.log();
             return;
         }
+
         let newTile:Tile = tile;
-        let chords:number[] =tile.getChords();
+        let chords:number[] = tile.getChords();
+        //console.log("got CHords");
         let xCur = chords[0];
         let yCur = chords[1];
+        //console.log("read CHords");
 
         switch(dir){ 
             case direction_t.down: {
@@ -114,7 +118,14 @@ export class Grid {
                 return tile;
         }
 
+        //console.log("setting new tile");
+        //console.log("x: " + xCur + " y: " + yCur);
+        if(this.map[yCur] === undefined){
+            console.log("map undefiend");
+            return tile;
+        }
         newTile = this.map[yCur][xCur];
+        //console.log("updated new tile");
         if(newTile === undefined){
             console.log();
             console.log("null tile ref");
@@ -124,96 +135,147 @@ export class Grid {
             console.log();
             return tile;
         }
-        console.log("new tile: " + newTile.getChords());
+        //console.log("new tile: " + newTile.getChords());
         return newTile;
     }
 
-    genHighWays() {
+    genHighWay(): boolean {
         console.log();
         console.log("generating Highways")
         console.log();
-        for (let highwayCount:number = 0; highwayCount < HIGHWAYCOUNT; ++highwayCount) {
-            //pick a boundary, starting top clockwise;
-            let boundary:number = Math.floor(Math.random() * 4);
-            let xStart:number = 0;
-            let yStart:number = 0;
-            let directionMoving = direction_t.none;
+        
+        //pick a boundary, starting top clockwise;
+        let boundary:number = Math.floor(Math.random() * 4);
+        let xStart:number = 0;
+        let yStart:number = 0;
+        let directionMoving = direction_t.none;
 
-            if(boundary%2 === 0){ //top or bottom
-                xStart = Math.floor(Math.random() * WIDTH);
-                if(boundary === 0){
-                    yStart = 0;
-                    directionMoving = direction_t.down;
-                }
-                else {
-                    yStart = HEIGHT-1;
-                    directionMoving = direction_t.up;
-                }
+        if(boundary%2 === 0){ //top or bottom
+            xStart = Math.floor(Math.random() * WIDTH);
+            if(boundary === 0){
+                yStart = 0;
+                directionMoving = direction_t.down;
             }
             else {
-                yStart = Math.floor(Math.random() * HEIGHT);
-                if(boundary === 1){
-                    xStart = 0;
-                    directionMoving = direction_t.left;
-                }
-                else {
-                    xStart = WIDTH-1;
-                    directionMoving = direction_t.right;
-                }
-            }
-
-            console.log("xStart:" + xStart +  " yStart:" + yStart);
-            let y:number = yStart;
-            let x:number = xStart;
-            let curTile:Tile = this.map[y][x];
-            for(let count:number = 0; count < 5; ++count) {
-                for(let highwayLength:number = 0; highwayLength < 20; ++highwayLength) {
-                    curTile.setToHighway();
-                    console.log("current tile: " + curTile.getChords());
-                    //while(curTile.getType() === tileType.regularHighway || curTile.getType() === tileType.hardHighway){
-                            //get new direction
-                    
-
-                        let nextTile:Tile = this.walkHighwayGen(curTile, directionMoving);
-                        if(nextTile === undefined || nextTile === curTile){
-                            console.log();
-                            console.log("newTile bad ");
-                            console.log();
-                            break;
-                        }
-                        console.log("updating curTile");
-                        curTile = nextTile;
-                    //}
-                }
-
-                let direction:number = Math.floor(Math.random() * 10);
-
-                        if(direction < 6) {
-                            // continue onwards
-                        }
-                        else {
-                            //perpindicular
-                            let turn:number = Math.floor(Math.random() * 2);
-                            if(turn === 0) {
-                                //left
-                                directionMoving--;
-                            }
-                            else {
-                                //right
-                                directionMoving++;
-                            }
-
-                            //correct enum
-                            if(directionMoving === direction_t.none ){
-                                directionMoving = direction_t.left;
-                            }
-                            if(directionMoving === direction_t.outbounds) {
-                                direction = direction_t.down;
-                            }
-                        }
+                yStart = HEIGHT-1;
+                directionMoving = direction_t.up;
             }
         }
+        else {
+            yStart = Math.floor(Math.random() * HEIGHT);
+            if(boundary === 1){
+                xStart = 0;
+                directionMoving = direction_t.left;
+            }
+            else {
+                xStart = WIDTH-1;
+                directionMoving = direction_t.right;
+            }
+        }
+
+        //console.log("xStart:" + xStart +  " yStart:" + yStart);
+        let y:number = yStart;
+        let x:number = xStart;
+        let curTile:Tile = this.map[y][x];
+        //console.log("got curr tile");
+        for(let count:number = 0; count < 5; ++count) {
+            for(let highwayLength:number = 0; highwayLength < 20; ++highwayLength) {
+                curTile.setToHighway();
+                //console.log("updated type");
+                //console.log("current tile: " + curTile.getChords());
+                //while(curTile.getType() === tileType.regularHighway || curTile.getType() === tileType.hardHighway){
+                        //get new direction
+                
+                    //console.log("walking tile");
+                    let nextTile:Tile = this.walkHighwayGen(curTile, directionMoving);
+                    //console.log("walked tile");
+                    if(nextTile === undefined || nextTile === curTile){
+                        console.log();
+                        console.log("newTile bad ");
+                        console.log();
+                        return false; 
+                    }
+                    if(nextTile.getType() === tileType.regularHighway || nextTile.getType() === tileType.hardHighway)
+                        return false;
+                    //console.log("updating curTile");
+                    curTile = nextTile;
+                //}
+            }
+
+            let direction:number = Math.floor(Math.random() * 10);
+
+            if(direction < 6) {
+                // continue onwards
+            }
+            else {
+                //perpindicular
+                let turn:number = Math.floor(Math.random() * 2);
+                if(turn === 0) {
+                    //left
+                    directionMoving--;
+                }
+                else {
+                    //right
+                    directionMoving++;
+                }
+
+                //correct enum
+                if(directionMoving === direction_t.none ){
+                    directionMoving = direction_t.left;
+                }
+                if(directionMoving === direction_t.outbounds) {
+                    direction = direction_t.down;
+                }
+            }
+        }
+
+        return true;
     }
+
+    copyGrid(map:Tile[][]): Tile[][] {
+        let mapCopy:Tile[][] = [];
+
+        for (let i:number = 0; i < HEIGHT; ++i){
+            mapCopy[i] = new Array();
+            for (let j:number = 0; j < WIDTH; ++j){
+                mapCopy[i].push(map[i][j].clone());
+            }
+        }
+
+        return mapCopy;
+    }
+
+    genHighWays() : boolean {
+        let tries:number = 0;
+        let count:number = 0
+        while(tries <  20  && count < HIGHWAYCOUNT){
+            console.log();
+            console.log("highway attempts failed:" + tries);
+            console.log("highway attempts passed:" + count);
+            console.log();
+            let oldMap:Tile[][] = this.copyGrid(this.map);
+
+            let success:boolean = this.genHighWay(); 
+            if(success){
+                console.log();
+                console.log("highway sucsessfull");
+                console.log();
+                count++;
+                //this.printMap();
+            }
+            else{
+                this.map = oldMap;
+                console.log();
+                console.log("highway failed");
+                console.log();
+                tries++;
+            }
+        }
+
+
+        return true;
+    }
+    
 
 
 }

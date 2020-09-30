@@ -7,14 +7,14 @@ export enum tileType {
 }
 
 export class Tile {
-    type: tileType;
     xChord: number;
     yChord: number;
+    type: tileType;
 
     constructor(x:number, y:number, type?:tileType ){
-        this.type = type | tileType.regular;
         this.xChord = x;
         this.yChord = y;
+        this.type = type | tileType.regular;
     }
 
     setType(type:tileType) {
@@ -42,14 +42,21 @@ export class Tile {
         }
     }
 
+    clone() : Tile {
+        let newTile = new Tile(this.xChord, this.yChord);
+        newTile.type = this.type;
+  
+        return newTile;
+    }
+
     getTileChar() { 
         switch(this.type){
             case tileType.blocked: return '0';
             case tileType.regular: return ' ';
-            case tileType.hard: return ' ';
+            case tileType.hard: return '2';
             case tileType.regularHighway: return 'a';
             case tileType.hardHighway: return 'b';
-            defualt: return '!'
+            default: return '!'
         }
     }
 
