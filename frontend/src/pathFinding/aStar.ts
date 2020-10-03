@@ -18,18 +18,18 @@ export function aStar(grid:Grid) {
 
     fringe.enqueue(start, 0);
     path.push(start);
-    console.log("beginging search: " + fringe.que.length);
+    //console.log("beginging search: " + fringe.que.length);
     while(!fringe.isEmpty()){
         let currentTile:QueElement | null = fringe.pop();
         if(currentTile === null)
             break;
-        console.log("Starting with fringe[0]");
+        //console.log("Starting with fringe[0]");
        // console.log(currentTile);
 
 
         //end condition
         if(currentTile.element === end){
-            console.log("end condition hit");
+           // console.log("end condition hit");
             while(currentTile.parent !== null){
                 path.push(currentTile.element);
                 currentTile = currentTile.parent;
@@ -40,9 +40,9 @@ export function aStar(grid:Grid) {
 
         visited.push(currentTile.element);
         let neighbors:Tile[] = grid.getNeighbors(currentTile.element.getChords());
-        console.log("got neighbors");
+        //console.log("got neighbors");
         for(let i:number = 0; i < neighbors.length; i++){
-            console.log("checking neighbors");
+            //console.log("checking neighbors");
             let neighbor:Tile = neighbors[i];
             if(visited.indexOf(neighbor) >= 0){
                 continue; // already visited this node
@@ -52,7 +52,7 @@ export function aStar(grid:Grid) {
 
 
             if(!fringe.inFringe(neighbor)){
-                console.log("Neighbor in fringe");
+               // console.log("Neighbor in fringe");
                 //must be the new best node
                 let newHVal = hVal(neighbor);
                 let newQueElm = new QueElement(neighbor, 0)
@@ -66,7 +66,7 @@ export function aStar(grid:Grid) {
             else {
                 let oldElm = fringe.getElm(neighbor);
                 if (oldElm !== null && gScore < oldElm.g) {
-                    console.log("found faster path to node");
+                   // console.log("found faster path to node");
                 // already found this node slower so we can update it
 
                     oldElm.parent = currentTile;

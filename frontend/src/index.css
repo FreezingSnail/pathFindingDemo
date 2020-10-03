@@ -20,15 +20,14 @@ body {
   .square {
     background: #fff;
     border: none;
-    font-size: 24px;
+    font-size: 6px;
     font-weight: bold;
-    line-height: 34px;
-    height: 34px;
+    height: 15px;
     margin-right: -4px;
-    margin-top: -4px;
-    padding: 0;
+    margin-top: -40px;
+    margin-bottom: -5px;
     text-align: center;
-    width: 34px;
+    width: 15px;
     
   }
   .square.green {

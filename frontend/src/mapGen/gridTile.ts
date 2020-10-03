@@ -5,6 +5,8 @@ export enum tileType {
     regularHighway,
     hardHighway,
     path,
+    start,
+    end,
 }
 
 export class Tile {
@@ -52,12 +54,14 @@ export class Tile {
 
     getTileChar() { 
         switch(this.type){
-            case tileType.blocked: return '0';
-            case tileType.regular: return '.';
-            case tileType.hard: return '^';
-            case tileType.regularHighway: return 'a';
-            case tileType.hardHighway: return 'b';
+            case tileType.blocked: return ' ';
+            case tileType.regular: return ' ';
+            case tileType.hard: return ' ';
+            case tileType.regularHighway: return ' ';
+            case tileType.hardHighway: return ' ';
             case tileType.path: return '>';
+            case tileType.start: return 'S';
+            case tileType.end: return 'E';
             default: return '!'
         }
     }

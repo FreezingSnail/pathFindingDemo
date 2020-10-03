@@ -40,6 +40,8 @@ export class Grid {
             this.start = this.genPoint();
             this.end =this.genPoint();
         }
+
+        this.setPoints();
     }
 
     
@@ -380,6 +382,11 @@ export class Grid {
             let chords:number[] = path[i].getChords();
             this.map[chords[1]][chords[0]].setType(tileType.path);
         }
+    }
+
+    setPoints() {
+        this.map[this.start[1]][this.start[0]].setType(tileType.start);
+        this.map[this.end[1]][this.end[0]].setType(tileType.end);
     }
     
 }

@@ -1,6 +1,6 @@
 import { Tile, tileType } from "../mapGen/gridTile";
 
-const enum moveCase {
+enum moveCase {
     regReg,
     regHard,
     regRhigh,
