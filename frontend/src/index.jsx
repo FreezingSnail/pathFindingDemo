@@ -43,33 +43,59 @@ function Square(type) {
     constructor(props) {
       super(props);
       this.state = {
-        map: new Grid(),
+        maps: [],
+        pathFound: false,
+        current: 0,
       };
+      for(let i = 0; i < 5; i++){
+          this.state.maps[i] = {"map": new Grid(), "pathFound": false};
+      }
+
       this.findPath = this.findPath.bind(this);
       this.log = this.log.bind(this);
-      this.render = this.render.bind(this);
+      this.nextMap = this.nextMap.bind(this);
+      this.previousMap = this.previousMap.bind(this);
     }
 
     findPath() {
-        let path= aStar(this.state.map);
+        let current = this.state.current;
+        let curMap = this.state.maps[current]["map"];
+        let path= aStar(curMap);
         console.log(path);
         //console.log(map.start);
         //console.log(map.end);
         if(path.length >0){
-            this.state.map.updateForPath(path);
+            curMap.updateForPath(path);
             console.log("success");
-            this.state.map.setPoints();
-            this.render();
+            curMap.setPoints();
+            let pathFound = this.state.maps[current]["pathFound"];
+            this.setState({pathFound: true});
         }   
     }
 
     log(){
-        this.state.map.printMap();
+        let current = this.state.current;
+        let curMap = this.state.maps[current]["map"].map;
+        curMap.printMap();
+    }
+
+    nextMap() {
+        if(this.state.current >=4)
+            this.setState({current: 0})
+        else
+            this.setState({current: (this.state.current+1)})
+
+    }
+
+    previousMap(){
+
     }
     
   
     render(){
-        let rows = this.state.map.map.map(function (item, i){
+        let current = this.state.current;
+        let curMap = this.state.maps[current]["map"].map;
+        let rows = curMap.map(function (item, i){
             let entry = item.map(function (element, j) {
                 return ( 
                     <td key={j}> {Square(element.getType())} </td>
@@ -83,6 +109,9 @@ function Square(type) {
             <div>
             <button onClick={this.findPath}> Find path</button>
             <button onClick={this.log}> log</button>
+            <button onClick={this.previousMap}> {'<'} </button>
+            <button onClick={this.nextMap}> {'>'} </button>
+            {'   Map number: '} {this.state.current}
             <table className="table-hover table-striped table-bordered">
                 <tbody>
                     {rows}
