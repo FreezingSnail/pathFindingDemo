@@ -1,6 +1,6 @@
 import { Tile, tileType } from "../mapGen/gridTile";
 
-const enum moveCase {
+enum moveCase {
     regReg,
     regHard,
     regRhigh,
@@ -87,10 +87,12 @@ function moveType(from:Tile, to:Tile) : moveCase {
         }
 
     }
+
+    return moveCase.error;
 }
 
 
-function moveCost(from:Tile, to:Tile) : number {
+export function moveCost(from:Tile, to:Tile) : number {
     if(!canMoveTo(to)){
         console.log("cant move to blocked tile");
         return -1;
