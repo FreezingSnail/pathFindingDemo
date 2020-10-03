@@ -7,15 +7,15 @@ import { aStar } from "./pathFinding/aStar"
 
 function Square(type) {
     switch(type){
-        case tileType.blocked: return <button className="square" style={{background: "black"}}/>;
-        case tileType.regular: return <button className="square" style={{background: "blue"}}/>;
-        case tileType.hard: return <button className="square" style={{background: "green"}}/>;
-        case tileType.regularHighway: return <button className="square" style={{background: "white"}}/>;
-        case tileType.hardHighway: return <button className="square" style={{background: "grey"}}/>;
-        case tileType.path: return <button className="square" style={{background: "pink"}}/>;
-        case tileType.start: return <button className="square" style={{background: "red"}}> S</button>;
-        case tileType.end: return <button className="square" style={{background: "red"}}>E</button>;
-        default: return <button className="square" style={{background: "brown"}}/>;
+        case tileType.blocked: return <td className="square" style={{background: "black"}}/>;
+        case tileType.regular: return <td className="square" style={{background: "blue"}}/>;
+        case tileType.hard: return <td className="square" style={{background: "green"}}/>;
+        case tileType.regularHighway: return <td className="square" style={{background: "white"}}/>;
+        case tileType.hardHighway: return <td className="square" style={{background: "grey"}}/>;
+        case tileType.path: return <td className="square" style={{background: "pink"}}/>;
+        case tileType.start: return <td className="square" style={{background: "red"}}/>;
+        case tileType.end: return <td className="square" style={{background: "orange"}}/>;
+        default: return <td className="square" style={{background: "brown"}}/>;
     }
   }
   
@@ -59,18 +59,20 @@ function Square(type) {
 
     findPath() {
         let current = this.state.current;
-        let curMap = this.state.maps[current]["map"];
-        let path= aStar(curMap);
-        console.log(path);
-        //console.log(map.start);
-        //console.log(map.end);
-        if(path.length >0){
-            curMap.updateForPath(path);
-            console.log("success");
-            curMap.setPoints();
-            let pathFound = this.state.maps[current]["pathFound"];
-            this.setState({pathFound: true});
-        }   
+        if (!this.state.maps[current]["pathFound"]) {
+            let curMap = this.state.maps[current]["map"];
+            let path= aStar(curMap);
+            console.log(path);
+            //console.log(map.start);
+            //console.log(map.end);
+            if(path.length >0){
+                curMap.updateForPath(path);
+                console.log("success");
+                curMap.setPoints();
+                this.state.maps[current]["pathFound"] = true;
+                this.setState({pathFound: true});
+            }   
+        }
     }
 
     log(){
@@ -98,11 +100,11 @@ function Square(type) {
         let rows = curMap.map(function (item, i){
             let entry = item.map(function (element, j) {
                 return ( 
-                    <td key={j}> {Square(element.getType())} </td>
+                    Square(element.getType())
                     );
             });
             return (
-                <tr key={i}> {entry} </tr>
+                <tr> {entry} </tr>
             );
         });
         return (
@@ -112,10 +114,8 @@ function Square(type) {
             <button onClick={this.previousMap}> {'<'} </button>
             <button onClick={this.nextMap}> {'>'} </button>
             {'   Map number: '} {this.state.current}
-            <table className="table-hover table-striped table-bordered">
-                <tbody>
-                    {rows}
-                </tbody>
+            <table>
+                {rows}
             </table>
             </div>
         );

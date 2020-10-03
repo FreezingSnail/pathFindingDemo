@@ -18,16 +18,29 @@ body {
   }
   
   .square {
-    background: #fff;
     border: none;
-    font-size: 6px;
-    font-weight: bold;
-    height: 15px;
-    padding: -10px;
-    margin: -2px;
-    text-align: center;
-    width: 5px;
-    
+    border-color: black;
+    border-width: 1px;
+    height: 4px;
+    padding: 0px;
+    margin: -5px;
+    width: 4px;
+    margin-left: -3px;;
+  }
+
+  tr {
+    border: none;
+    margin-top: -5px;
+    margin-left: -3px;;
+  }
+
+  table { 
+    border: solid;
+    border-color: black;
+    background-color: black;
+    border-collapse: collapse;
+    margin: 5px;
+    padding: -1px;
   }
   .square.green {
     background: aquamarine;
