@@ -88,15 +88,17 @@ export class Grid {
 
     walkHighwayGen (tile:Tile, dir:direction_t) : Tile{
 
+        
+        let newTile:Tile = tile;
+        let chords:number[] = tile.getChords();
+        
         if(tile === undefined){
             console.log();
             console.log("ded");
             console.log();
-            return;
+            return newTile;
         }
 
-        let newTile:Tile = tile;
-        let chords:number[] = tile.getChords();
         //console.log("got CHords");
         let xCur = chords[0];
         let yCur = chords[1];

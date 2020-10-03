@@ -17,9 +17,12 @@ export function aStar(grid:Grid) {
     }
 
     fringe.enqueue(start, 0);
+    path.push(start);
     console.log("beginging search: " + fringe.que.length);
     while(!fringe.isEmpty()){
-        let currentTile:QueElement = fringe.pop();
+        let currentTile:QueElement | null = fringe.pop();
+        if(currentTile === null)
+            break;
         console.log("Starting with fringe[0]");
        // console.log(currentTile);
 
@@ -62,7 +65,7 @@ export function aStar(grid:Grid) {
             }
             else {
                 let oldElm = fringe.getElm(neighbor);
-                if (gScore < oldElm.g) {
+                if (oldElm !== null && gScore < oldElm.g) {
                     console.log("found faster path to node");
                 // already found this node slower so we can update it
 

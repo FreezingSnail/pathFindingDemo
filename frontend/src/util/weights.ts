@@ -87,6 +87,8 @@ function moveType(from:Tile, to:Tile) : moveCase {
         }
 
     }
+
+    return moveCase.error;
 }
 
 

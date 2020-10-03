@@ -5,11 +5,13 @@ export class QueElement {
     f:number;
     g:number;
     h:number;
-    parent:QueElement;
+    parent:QueElement | null;
 
     constructor(element:Tile, f:number, parent?:QueElement) {
         this.element = element;
         this.f = f;
+        this.h = 0;
+        this.g = 0;
         this.parent = parent ||  null;
     }
 }
@@ -57,15 +59,14 @@ export class PriorityQueue {
 
     }
 
-    pop() : QueElement{
+    pop() : QueElement | null{
         if(!this.isEmpty()){
             let elm = this.que[0];
             this.que = this.que.slice(1);
             return elm;
         }
-        else{
-            return null;
-        }
+
+        return null;
     }
 
     remove(item:Tile) : boolean{
@@ -94,8 +95,8 @@ export class PriorityQueue {
         return false;
     }
 
-    getElm(tile:Tile) :QueElement{
-        let elm:QueElement = null;
+    getElm(tile:Tile) :QueElement | null{
+        let elm:QueElement| null = null;
         for(let i:number = 0; i < this.que.length; ++i){
             if(this.que[i].element === tile){
                 elm = this.que[i];
