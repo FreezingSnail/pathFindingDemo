@@ -19,17 +19,24 @@ body {
   
   .square {
     background: #fff;
-    border: 1px solid #999;
-    float: left;
+    border: none;
     font-size: 24px;
     font-weight: bold;
     line-height: 34px;
     height: 34px;
-    margin-right: -1px;
-    margin-top: -1px;
+    margin-right: -4px;
+    margin-top: -4px;
     padding: 0;
     text-align: center;
     width: 34px;
+    
+  }
+  .square.green {
+    background: aquamarine;
+  }
+
+  .square.error {
+    background: brown;
   }
   
   .square:focus {

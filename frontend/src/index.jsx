@@ -2,14 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import { Grid, HEIGHT, WIDTH } from "./mapGen/mapGrid.ts"
-//import { Tile } from "../../mapGen/gridTile"
+import { Tile, tileType } from "./mapGen/gridTile"
 
-function Square(props) {
-    return (
-      <button className="square" onClick={props.onClick}>
-        {props.getTileChar()}
-      </button>
-    );
+function Square(type) {
+    switch(type){
+        case tileType.blocked: return <button className="square" style={{background: "black"}}/>;
+        case tileType.regular: return <button className="square" style={{background: "blue"}}/>;
+        case tileType.hard: return <button className="square" style={{background: "green"}}/>;
+        case tileType.regularHighway: return <button className="square" style={{background: "white"}}/>;
+        case tileType.hardHighway: return <button className="square" style={{background: "grey"}}/>;
+        case tileType.path: return <button className="square" style={{background: "pink"}}/>;
+        default: return <button className="square" style={{background: "brown"}}/>;
+    }
   }
   
   class Board extends React.Component {
@@ -20,6 +24,7 @@ function Square(props) {
         />
       );
     }
+    
   
     render() {
       return (
@@ -27,6 +32,9 @@ function Square(props) {
       );
     }
   }
+
+
+
   
   class Game extends React.Component {
     constructor(props) {
@@ -39,18 +47,24 @@ function Square(props) {
   
     
   
-    render() {
-  
-      return (
-        <div className="map">
-          <div className="map-board">
-            <Board
-            />
-          </div>
-          <div className="game-info">
-          </div>
-        </div>
-      );
+    render(){
+        let rows = this.state.map.map.map(function (item, i){
+            let entry = item.map(function (element, j) {
+                return ( 
+                    <td key={j}> {Square(element.getType())} </td>
+                    );
+            });
+            return (
+                <tr key={i}> {entry} </tr>
+            );
+        });
+        return (
+            <table className="table-hover table-striped table-bordered">
+                <tbody>
+                    {rows}
+                </tbody>
+            </table>
+        );
     }
   }
   
