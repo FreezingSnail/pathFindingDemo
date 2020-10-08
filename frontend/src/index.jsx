@@ -5,6 +5,7 @@ import { Grid, HEIGHT, WIDTH } from "./mapGen/mapGrid.ts"
 import { Tile, tileType } from "./mapGen/gridTile"
 import { aStar } from "./pathFinding/aStar"
 
+//builds table element to represent the map
 function Square(type) {
     switch(type){
         case tileType.blocked: return <td className="square" style={{background: "black"}}/>;
@@ -19,24 +20,6 @@ function Square(type) {
     }
   }
   
-  class Board extends React.Component {
-    renderSquare(i, j) {
-      return (
-        <Square
-          value={this.props.grid.map[j][i]}
-        />
-      );
-    }
-    
-  
-    render() {
-      return (
-        <div></div>
-      );
-    }
-  }
-
-
 
   
   class Game extends React.Component {
@@ -57,6 +40,7 @@ function Square(type) {
       this.previousMap = this.previousMap.bind(this);
     }
 
+    //run pathfind alg and update map
     findPath() {
         let current = this.state.current;
         if (!this.state.maps[current]["pathFound"]) {
@@ -75,6 +59,7 @@ function Square(type) {
         }
     }
 
+    //debug function to send map to console
     log(){
         let current = this.state.current;
         let curMap = this.state.maps[current]["map"].map;
@@ -90,6 +75,10 @@ function Square(type) {
     }
 
     previousMap(){
+        if(this.state.current <0)
+            this.setState({current: 3})
+        else
+            this.setState({current: (this.state.current-1)})
 
     }
     

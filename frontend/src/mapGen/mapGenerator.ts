@@ -2,6 +2,7 @@ import { aStar } from "../pathFinding/aStar";
 import { Tile } from "./gridTile";
 import { Grid } from "./mapGrid";
 
+//debugging file
 let map:Grid = new Grid();
 
 map.printMap();
