@@ -18,11 +18,13 @@ function isDiag(from:Tile, to:Tile) : boolean {
     return !(from.xChord === to.xChord || from.yChord === to.yChord);
 }
 
+
 function canMoveTo(to:Tile) : boolean {
     return (to.getType() !== tileType.blocked);
 }
 
-
+//helper function for moveCost
+//determines what class of move type is given two tiles
 function moveType(from:Tile, to:Tile) : moveCase {
     let fromType:tileType = from.getType();
     let toType:tileType = to.getType();
@@ -91,7 +93,7 @@ function moveType(from:Tile, to:Tile) : moveCase {
     return moveCase.error;
 }
 
-
+//returns cost of moving between input tiles from moveCase
 export function moveCost(from:Tile, to:Tile) : number {
     if(!canMoveTo(to)){
         console.log("cant move to blocked tile");

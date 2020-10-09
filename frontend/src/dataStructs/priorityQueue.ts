@@ -7,6 +7,8 @@ export class QueElement {
     h:number;
     parent:QueElement | null;
 
+    //for a* we need a linked list of the paths
+    //we can use the QueElm to store that for us
     constructor(element:Tile, f:number, parent?:QueElement) {
         this.element = element;
         this.f = f;

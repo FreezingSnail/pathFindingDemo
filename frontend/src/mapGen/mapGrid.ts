@@ -22,6 +22,7 @@ export class Grid {
     start:number[];
     end:number[];
 
+    //construcor genorates a random map with start and end points.
     constructor() {
         this.map = [];
         for(let i = 0; i < HEIGHT; ++i){
@@ -44,7 +45,7 @@ export class Grid {
         this.setPoints();
     }
 
-    
+    //debug function that prints map to console
     printMap(){
         // build each rows sting
         let rowString: string = "";
@@ -66,6 +67,8 @@ export class Grid {
         console.log();
     }
 
+    // generates 8 32x32 locations 
+    //each tile in location given a 50% chance to switch to a hard tile
     genHardCells() {
         for (let regionsCount:number = 0; regionsCount < 8; ++regionsCount) {
             let xChord:number = Math.floor((Math.random() * WIDTH));
@@ -79,7 +82,7 @@ export class Grid {
 
             for(let i = yStart; i < yEnd; ++i) {
                 for(let j = xStart; j < xEnd; ++j){
-                    let chance = Math.floor(Math.random() * 2);
+                    let chance = Math.floor(Math.random() * 2); //50% chance
                     if(chance === 1){//make tile hard
                         this.map[i][j].setType(tileType.hard);
                     }
@@ -88,6 +91,9 @@ export class Grid {
         }
     }
 
+    //helper funciton for highway generation
+    //walks next tile in map and confirms its a valid tile
+    //else returns the current tile as a failure
     walkHighwayGen (tile:Tile, dir:direction_t) : Tile{
 
         
@@ -165,6 +171,11 @@ export class Grid {
         return newTile;
     }
 
+    //generates a highways on the map
+    //each highway is a series of 5 20 tile walks
+    //each walk has a 20% chance of turning left or right
+    //returns flase if highway generation is invalid
+    //intersects another highway or a blocked block
     genHighWay(): boolean {
         //console.log();
         //console.log("generating Highways")
@@ -209,10 +220,7 @@ export class Grid {
                 curTile.setToHighway();
                 //console.log("updated type");
                 //console.log("current tile: " + curTile.getChords());
-                //while(curTile.getType() === tileType.regularHighway || curTile.getType() === tileType.hardHighway){
-                        //get new direction
                 
-                    //console.log("walking tile");
                     let nextTile:Tile = this.walkHighwayGen(curTile, directionMoving);
                     //console.log("walked tile");
                     if(nextTile === undefined || nextTile === curTile){
@@ -258,6 +266,7 @@ export class Grid {
         return true;
     }
 
+    //creates a deep copy of a tile[][] array
     copyGrid(map:Tile[][]): Tile[][] {
         let mapCopy:Tile[][] = [];
 
@@ -271,6 +280,8 @@ export class Grid {
         return mapCopy;
     }
 
+    //Attempts to generate 5 highways
+    //returns false if fails
     genHighWays() : boolean {
         let tries:number = 0;
         let count:number = 0
@@ -302,6 +313,7 @@ export class Grid {
         return true;
     }
 
+    //randomly selects 20% of tiles and turns them to blocked tiles
     genBlockCells(){
         let cellsToBlock:Tile[] = [];
 
@@ -321,6 +333,7 @@ export class Grid {
         
     }
 
+    //randomly produces a posistion within 20 tiles of a border
     genPoint(): number[] {
         
 
@@ -338,6 +351,7 @@ export class Grid {
         return [x, y];
     }
 
+    //returns an array of all neighboring tiles of input
     getNeighbors(chords:number[] ): Tile[] {
         if (chords.length < 2)
             return [];
@@ -369,14 +383,17 @@ export class Grid {
         return neighbors;
     }
 
+    //returns tile at start chords
     getStart():Tile {
         return this.map[this.start[1]][this.start[0]];
     }
 
+    //returns tile at end chords
     getEnd():Tile {
         return this.map[this.end[1]][this.end[0]];
     }
 
+    //takes a tile array and updates tiles in map array to path type
     updateForPath(path:Tile[]) {
         for(let i:number = 0; i < path.length; i++){
             let chords:number[] = path[i].getChords();
@@ -384,6 +401,7 @@ export class Grid {
         }
     }
 
+    //sets starting point and endpoint tiles on map.
     setPoints() {
         this.map[this.start[1]][this.start[0]].setType(tileType.start);
         this.map[this.end[1]][this.end[0]].setType(tileType.end);
